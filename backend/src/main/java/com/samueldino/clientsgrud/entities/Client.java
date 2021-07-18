@@ -14,7 +14,7 @@ import javax.persistence.Table;
 import com.samueldino.clientsgrud.dto.ClientDTO;
 
 @Entity
-@Table(name = "tb_customer")
+@Table(name = "tb_client")
 public class Client implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
