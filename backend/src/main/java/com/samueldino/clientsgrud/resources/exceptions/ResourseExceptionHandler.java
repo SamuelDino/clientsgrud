@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.samueldino.clientsgrud.services.exceptions.DatabaseException;
+import com.samueldino.clientsgrud.services.exceptions.NotSuchElementException;
 import com.samueldino.clientsgrud.services.exceptions.ResourceNotFoundException;
 
 @ControllerAdvice
@@ -34,6 +35,18 @@ public class ResourseExceptionHandler {
 		err.setTimestamp(Instant.now());
 		err.setStatus(status.value());
 		err.setError("Database Exception");
+		err.setMessage(e.getMessage());
+		err.setPath(request.getRequestURI());
+		return ResponseEntity.status(status).body(err);
+	}
+	
+	@ExceptionHandler(NotSuchElementException.class)
+	public ResponseEntity<StandardError> databaseIntegrity(NotSuchElementException e, HttpServletRequest request){
+		HttpStatus status = HttpStatus.BAD_REQUEST;
+		StandardError err = new StandardError();
+		err.setTimestamp(Instant.now());
+		err.setStatus(status.value());
+		err.setError("Element Exception");
 		err.setMessage(e.getMessage());
 		err.setPath(request.getRequestURI());
 		return ResponseEntity.status(status).body(err);

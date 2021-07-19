@@ -1,5 +1,6 @@
 package com.samueldino.clientsgrud.services;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
@@ -16,6 +17,7 @@ import com.samueldino.clientsgrud.dto.ClientDTO;
 import com.samueldino.clientsgrud.entities.Client;
 import com.samueldino.clientsgrud.repositories.ClientRepository;
 import com.samueldino.clientsgrud.services.exceptions.DatabaseException;
+import com.samueldino.clientsgrud.services.exceptions.NotSuchElementException;
 import com.samueldino.clientsgrud.services.exceptions.ResourceNotFoundException;
 
 @Service
@@ -43,11 +45,12 @@ public class ClientService {
 	@Transactional
 	public ClientDTO update(Long id, ClientDTO dto) {
 		try {
-			Client entity = new Client(id, dto);
+			Optional<Client> obj = repository.findById(id);
+			Client entity = new Client(obj.get().getId(), dto);
 			return new ClientDTO(repository.save(entity));
 		}
-		catch (EntityNotFoundException e){
-			throw new ResourceNotFoundException("ID não encontrado !");
+		catch (NoSuchElementException e){
+			throw new NotSuchElementException("ID não encontrado !");
 		}
 
 	}
